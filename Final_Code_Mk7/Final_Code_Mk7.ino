@@ -146,42 +146,36 @@ int ButtonRead( int buttonState[], int lastButtonState[], int k){
     lastButtonState[k] = reading;
 } //Break function
 
+//=============================================================================
+int ResetButton( int resetState, int resetLastState) {
+    unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
+    unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
 
+    // read the state of the switch into a local variable:
+    int reading = digitalRead(resetButton);
 
+    // If the switch changed, due to noise or pressing:
+    if (reading != resetLastState) {
+        // reset the debouncing timer
+        lastDebounceTime = millis();
 
+        while((millis() - lastDebounceTime) < debounceDelay) {  //Makes it wait until debounce time is over
+        }  //Breaks waiting while loop
+        if (reading != resetState) {
+            resetState = reading;
 
+            // only toggle the LED if the new button state is LOW
+            if (resetState == LOW) {
+                return 1;
+            } //Breaks buttonState High if check
+        } //Breaks second if
 
+    } //Break first if
 
-
-
-int ResetButton( int resetState, int resetLastState){
-  unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
-  unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
-
-// read the state of the switch into a local variable:
-  int reading = digitalRead(resetButton);
-
-  // If the switch changed, due to noise or pressing:
-  if (reading != resetLastState) {
-    // reset the debouncing timer
-    lastDebounceTime = millis();
-
-  while((millis() - lastDebounceTime) < debounceDelay) {  //Makes it wait until debounce time is over
-                }  //Breaks waiting while loop
-    if (reading != resetState) {
-      resetState = reading;
-
-      // only toggle the LED if the new button state is LOW
-      if (resetState == LOW) {
-        return 1;
-      } //Breaks buttonState High if check
-    } //Breaks second if
-
-  } //Break first if
-
-     else {
+    else {
         return 0;
-        } //Breaks else
-  // save the reading. Next time through the loop, it'll be the lastButtonState:
-  resetLastState = reading;
+    } //Breaks else
+
+    // save the reading. Next time through the loop, it'll be the lastButtonState:
+    resetLastState = reading;
 } //Break function
